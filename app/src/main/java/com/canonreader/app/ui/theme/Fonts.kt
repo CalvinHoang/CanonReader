@@ -6,23 +6,19 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import com.canonreader.app.R
 
-// The same three families Marginal Reader uses:
-// Roboto Flex for headings/titles, Open Sans for UI text, Merriweather for post body.
+// Two families for a printed-book feel:
+// Cinzel (Roman inscriptional capitals) for the masthead and ribbon titles,
+// EB Garamond (a revival of Claude Garamont's 16th-century type) for everything else.
+// Both are static instances cut from the Google Fonts variable files (SIL OFL).
 
-// Roboto Flex ships as a variable font only; heavier weights are synthesized from the base file.
-val RobotoFlex = FontFamily(
-    Font(R.font.roboto_flex_regular, FontWeight.Normal),
+val Cinzel = FontFamily(
+    Font(R.font.cinzel_regular, FontWeight.Normal),
+    Font(R.font.cinzel_bold, FontWeight.Bold),
 )
 
-val OpenSans = FontFamily(
-    Font(R.font.open_sans_regular, FontWeight.Normal),
-    Font(R.font.open_sans_regular_italic, FontWeight.Normal, FontStyle.Italic),
-    Font(R.font.open_sans_semibold, FontWeight.SemiBold),
-    Font(R.font.open_sans_bold, FontWeight.Bold),
-)
-
-val Merriweather = FontFamily(
-    Font(R.font.merriweather_regular, FontWeight.Normal),
-    Font(R.font.merriweather_regular_italic, FontWeight.Normal, FontStyle.Italic),
-    Font(R.font.merriweather_bold, FontWeight.Bold),
+val Garamond = FontFamily(
+    Font(R.font.eb_garamond_regular, FontWeight.Normal),
+    Font(R.font.eb_garamond_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.eb_garamond_semibold, FontWeight.SemiBold),
+    Font(R.font.eb_garamond_bold, FontWeight.Bold),
 )

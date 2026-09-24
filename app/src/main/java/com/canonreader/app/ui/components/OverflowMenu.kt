@@ -10,6 +10,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 /** App destinations; preferences live in Settings. */
 @Composable
 fun OverflowMenu(
-    tint: Color = Color.Black,
+    tint: Color = LocalContentColor.current,
     onOpenSaved: (() -> Unit)? = null,
     onOpenSettings: (() -> Unit)? = null,
     onOpenAbout: (() -> Unit)? = null,

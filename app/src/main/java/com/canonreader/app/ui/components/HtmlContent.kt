@@ -22,18 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.canonreader.app.ui.theme.CanonGoldSoft
-import com.canonreader.app.ui.theme.Merriweather
-import com.canonreader.app.ui.theme.RobotoFlex
+import com.canonreader.app.ui.theme.CanonGilt
+import com.canonreader.app.ui.theme.Garamond
 
 /** Renders post HTML as native Compose text in the blog's reading type. */
 @Composable
 fun HtmlContent(
     html: String,
     modifier: Modifier = Modifier,
-    fontFamily: FontFamily = Merriweather,
-    fontSize: TextUnit = 16.sp,
-    lineHeight: TextUnit = 27.sp,
+    fontFamily: FontFamily = Garamond,
+    fontSize: TextUnit = 19.sp,
+    lineHeight: TextUnit = 30.sp,
     selectable: Boolean = false,
 ) {
     val blocks = remember(html) { parseHtmlBlocks(html) }
@@ -62,16 +61,16 @@ private fun RenderBlock(block: HtmlBlock, bodyStyle: TextStyle) {
         is HtmlBlock.Heading -> Text(
             text = block.text,
             style = bodyStyle.copy(
-                fontFamily = RobotoFlex,
-                fontWeight = FontWeight.Bold,
+                fontFamily = Garamond,
+                fontWeight = FontWeight.SemiBold,
                 fontSize = when (block.level) {
-                    1 -> 24.sp
-                    2 -> 22.sp
-                    3 -> 20.sp
-                    4 -> 17.sp
-                    else -> 16.sp
+                    1 -> 27.sp
+                    2 -> 25.sp
+                    3 -> 22.sp
+                    4 -> 20.sp
+                    else -> 19.sp
                 },
-                lineHeight = 26.sp,
+                lineHeight = 30.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             ),
         )
@@ -80,7 +79,7 @@ private fun RenderBlock(block: HtmlBlock, bodyStyle: TextStyle) {
                 Modifier
                     .width(3.dp)
                     .fillMaxHeight()
-                    .background(CanonGoldSoft)
+                    .background(CanonGilt)
             )
             Column(
                 Modifier.padding(start = 14.dp),

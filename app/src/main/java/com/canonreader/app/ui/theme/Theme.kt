@@ -6,78 +6,95 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
-// Marginal Reader's layout with its own colours: an ochre masthead instead of MR green,
-// so the two apps are easy to tell apart side by side.
-val CanonGold = Color(0xFFE3B23C)      // masthead / brand
-val CanonGoldSoft = Color(0xFFD9A441)  // blockquote border, accents
-val CanonGoldDark = Color(0xFF5A4205)
-val CanonLinkBlue = Color(0xFF1F3F8F)
-val CanonLinkBlueDark = Color(0xFF9DB2EE)
-val CanonPaper = Color(0xFFFFFFFF)
-val CanonInk = Color(0xFF111111)
-val CanonGray = Color(0xFF6F6A60)
-val CanonBorder = Color(0xFFD2CCC0)
+// A Renaissance printed-book palette: iron-gall ink on vellum, an oxblood ribbon
+// like a rubricated heading, gilt rules, and lapis-blue links.
+val CanonOxblood = Color(0xFF7A2418)      // masthead / brand
+val CanonOxbloodDeep = Color(0xFF4E1911)  // masthead in dark mode
+val CanonGilt = Color(0xFFB8913F)         // rules under the ribbon, blockquote border
+val CanonGiltPale = Color(0xFFE9D6A8)
+val CanonVellum = Color(0xFFF5EDDC)       // page
+val CanonInk = Color(0xFF2B2118)          // text
+val CanonSepia = Color(0xFF6B5A48)        // secondary text
+val CanonLapis = Color(0xFF22427A)
+val CanonLapisDark = Color(0xFF9DB4E0)
+val CanonBorder = Color(0xFFD6C7A6)
+
+/** Text and icons drawn on the oxblood ribbon. */
+val CanonOnRibbon = Color(0xFFF5EDDC)
 
 private val LightColors = lightColorScheme(
-    primary = CanonGoldDark,
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFFF7E8C2),
-    onPrimaryContainer = CanonGoldDark,
-    secondary = Color(0xFF8A6512),
-    onSecondary = Color.White,
-    secondaryContainer = Color(0xFFF4ECD8),
-    onSecondaryContainer = CanonGoldDark,
-    tertiary = CanonLinkBlue,
-    background = CanonPaper,
+    primary = CanonOxblood,
+    onPrimary = CanonVellum,
+    primaryContainer = Color(0xFFF1DCCF),
+    onPrimaryContainer = Color(0xFF3F0F08),
+    secondary = Color(0xFF7C6127),
+    onSecondary = CanonVellum,
+    secondaryContainer = CanonGiltPale,
+    onSecondaryContainer = Color(0xFF3B2C0A),
+    tertiary = CanonLapis,
+    background = CanonVellum,
     onBackground = CanonInk,
-    surface = CanonPaper,
+    surface = CanonVellum,
     onSurface = CanonInk,
-    surfaceVariant = Color(0xFFF4F1EA),
-    onSurfaceVariant = CanonGray,
+    surfaceVariant = Color(0xFFECE1C9),
+    onSurfaceVariant = CanonSepia,
+    surfaceContainerLowest = Color(0xFFFAF4E8),
+    surfaceContainerLow = Color(0xFFF1E8D4),
+    surfaceContainer = Color(0xFFEDE2CA),
+    surfaceContainerHigh = Color(0xFFE8DCC1),
+    surfaceContainerHighest = Color(0xFFE2D5B8),
     outline = CanonBorder,
-    outlineVariant = Color(0xFFE9E4DA),
+    outlineVariant = Color(0xFFE4D8BD),
 )
 
 private val DarkColors = darkColorScheme(
-    primary = CanonGold,
-    onPrimary = Color(0xFF3A2A00),
-    primaryContainer = Color(0xFF4A3708),
-    onPrimaryContainer = Color(0xFFF7E3AE),
-    secondary = CanonGoldSoft,
-    onSecondary = Color(0xFF3A2A00),
-    secondaryContainer = Color(0xFF332812),
-    onSecondaryContainer = Color(0xFFF7E3AE),
-    tertiary = CanonLinkBlueDark,
-    background = Color(0xFF131211),
-    onBackground = Color(0xFFE9E5DC),
-    surface = Color(0xFF131211),
-    onSurface = Color(0xFFE9E5DC),
-    surfaceVariant = Color(0xFF1F1D1A),
-    onSurfaceVariant = Color(0xFFB0AA9E),
-    outline = Color(0xFF45413A),
-    outlineVariant = Color(0xFF2D2A26),
+    primary = Color(0xFFE0B7A6),
+    onPrimary = Color(0xFF4A140C),
+    primaryContainer = CanonOxbloodDeep,
+    onPrimaryContainer = Color(0xFFF7DDD2),
+    secondary = Color(0xFFD9B66A),
+    onSecondary = Color(0xFF3B2C0A),
+    secondaryContainer = Color(0xFF4A3A18),
+    onSecondaryContainer = Color(0xFFF3E1B5),
+    tertiary = CanonLapisDark,
+    background = Color(0xFF17130F),
+    onBackground = Color(0xFFE9DEC6),
+    surface = Color(0xFF17130F),
+    onSurface = Color(0xFFE9DEC6),
+    surfaceVariant = Color(0xFF241E18),
+    onSurfaceVariant = Color(0xFFB3A48C),
+    surfaceContainerLowest = Color(0xFF120F0C),
+    surfaceContainerLow = Color(0xFF1C1713),
+    surfaceContainer = Color(0xFF211B16),
+    surfaceContainerHigh = Color(0xFF2A231C),
+    surfaceContainerHighest = Color(0xFF342B23),
+    outline = Color(0xFF4F4436),
+    outlineVariant = Color(0xFF30281F),
 )
 
-// Headings in Roboto Flex, everything else in Open Sans; Merriweather is applied
-// directly by HtmlContent for post body text.
+// EB Garamond throughout, a size up from Material's defaults since Garamond
+// sets small on the body. Cinzel is applied directly by the masthead and ribbons.
 private val CanonTypography = Typography().let { base ->
     base.copy(
-        displaySmall = base.displaySmall.copy(fontFamily = RobotoFlex),
-        headlineLarge = base.headlineLarge.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.Bold),
-        headlineMedium = base.headlineMedium.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.Bold),
-        headlineSmall = base.headlineSmall.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.Bold),
-        titleLarge = base.titleLarge.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.SemiBold),
-        titleMedium = base.titleMedium.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.SemiBold),
-        titleSmall = base.titleSmall.copy(fontFamily = RobotoFlex, fontWeight = FontWeight.SemiBold),
-        bodyLarge = base.bodyLarge.copy(fontFamily = OpenSans),
-        bodyMedium = base.bodyMedium.copy(fontFamily = OpenSans),
-        bodySmall = base.bodySmall.copy(fontFamily = OpenSans),
-        labelLarge = base.labelLarge.copy(fontFamily = OpenSans),
-        labelMedium = base.labelMedium.copy(fontFamily = OpenSans),
-        labelSmall = base.labelSmall.copy(fontFamily = OpenSans),
+        displaySmall = base.displaySmall.copy(fontFamily = Garamond),
+        headlineLarge = base.headlineLarge.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold),
+        headlineMedium = base.headlineMedium.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold),
+        headlineSmall = base.headlineSmall.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold, fontSize = 27.sp, lineHeight = 33.sp),
+        titleLarge = base.titleLarge.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold, fontSize = 24.sp),
+        titleMedium = base.titleMedium.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold, fontSize = 19.sp, lineHeight = 25.sp),
+        titleSmall = base.titleSmall.copy(fontFamily = Garamond, fontWeight = FontWeight.SemiBold, fontSize = 16.sp),
+        bodyLarge = base.bodyLarge.copy(fontFamily = Garamond, fontSize = 18.sp, lineHeight = 26.sp),
+        bodyMedium = base.bodyMedium.copy(fontFamily = Garamond, fontSize = 16.sp, lineHeight = 23.sp),
+        bodySmall = base.bodySmall.copy(fontFamily = Garamond, fontSize = 14.sp, lineHeight = 19.sp),
+        labelLarge = base.labelLarge.copy(fontFamily = Garamond, fontSize = 16.sp),
+        labelMedium = base.labelMedium.copy(fontFamily = Garamond, fontSize = 14.sp),
+        labelSmall = base.labelSmall.copy(fontFamily = Garamond, fontSize = 13.sp, letterSpacing = 0.3.sp),
     )
 }
 
@@ -92,3 +109,9 @@ fun CanonTheme(
         content = content,
     )
 }
+
+/** The ribbon's oxblood, deepened in dark mode so it doesn't glare against the walnut page. */
+@Composable
+@ReadOnlyComposable
+fun ribbonColor(): Color =
+    if (MaterialTheme.colorScheme.background.luminance() < 0.5f) CanonOxbloodDeep else CanonOxblood

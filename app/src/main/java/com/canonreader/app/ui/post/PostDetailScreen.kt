@@ -306,7 +306,7 @@ private fun ContinueCard(
 private fun sourceCredit(post: Post): String = buildString {
     append(post.workTitle)
     post.translator?.let { append(", translated by ").append(it) }
-    append(". Text from Standard Ebooks (public domain). The words are the author's; only the cuts and headings are ours.")
+    append(". Public-domain text from Standard Ebooks or Project Gutenberg. The words are the author's; only the cuts and headings are ours.")
 }
 
 private fun shareText(post: Post): String = buildString {

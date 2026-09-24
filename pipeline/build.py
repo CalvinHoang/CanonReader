@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Canon pipeline: Standard Ebooks sources -> blog-sized posts -> SQLite asset.
+Canon pipeline: Standard Ebooks and Project Gutenberg sources -> blog-sized posts -> SQLite asset.
 
 The author's words are never edited. The pipeline only:
   * chooses where to cut (at the author's own section / speech / paragraph boundaries),
-  * converts Standard Ebooks XHTML into the small HTML subset the app renders,
+  * converts Standard Ebooks XHTML (and, via gutenberg.py, Project Gutenberg HTML) into the
+    small HTML subset the app renders,
   * adds packaging: a title (the original heading, or the passage's own opening words),
     a source line (work / chapter / part), speaker labels for dialogue, and notes.
 
-Run:  ./fetch_sources.sh          (clones the Standard Ebooks sources into pipeline/se)
+Run:  ./fetch_sources.sh          (clones the sources into pipeline/se and pipeline/pg)
       python3 build.py            (writes out/canon.db, out/report.txt and the app asset)
       python3 verify.py           (checks every work word for word against the source)
 """
@@ -24,6 +25,8 @@ import sys
 from dataclasses import dataclass, field
 
 from lxml import etree
+
+import gutenberg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SE_DIR = os.path.join(HERE, "se")
@@ -48,10 +51,12 @@ AUTHORS = [
     # id, display name, lifespan, one-line note (shown on the author page)
     ("plato", "Plato", "c. 428–348 BC", "Dialogues, in Benjamin Jowett’s translation."),
     ("shakespeare", "William Shakespeare", "1564–1616", "The plays, sonnets and poems."),
-    ("hume", "David Hume", "1711–1776", "The Treatise and the first Enquiry."),
-    ("mill", "John Stuart Mill", "1806–1873", "On Liberty, The Subjection of Women and the Autobiography."),
-    ("james", "William James", "1842–1910", "Varieties, Pragmatism and A Pluralistic Universe."),
-    ("nietzsche", "Friedrich Nietzsche", "1844–1900", "Zarathustra, Beyond Good and Evil and the Genealogy."),
+    ("hume", "David Hume", "1711–1776", "The Treatise, both Enquiries, essays, the Dialogues and The History of England."),
+    ("mill", "John Stuart Mill", "1806–1873",
+     "The Logic, On Liberty, Representative Government, Utilitarianism, The Subjection of Women and the Autobiography."),
+    ("james", "William James", "1842–1910",
+     "The Principles of Psychology, The Will to Believe, Varieties, Pragmatism and A Pluralistic Universe."),
+    ("nietzsche", "Friedrich Nietzsche", "1844–1900", "From The Birth of Tragedy to Ecce Homo."),
 ]
 
 # Plato: a sensible reading order (trial and death first, then early, middle, late).
@@ -804,6 +809,13 @@ def collect():
         posts = build_work(reader, author, wid, title, units)
         works.append(dict(id=wid, author=author, title=title, year=year, translator=translator,
                           posts=posts, repo=repo))
+
+    # --- Project Gutenberg texts of works Standard Ebooks hasn't produced (gutenberg.py) ---
+    for book in gutenberg.BOOKS:
+        reader = gutenberg.GReader(book, Heading, Unit)
+        posts = build_work(reader, book.author, book.work_id, book.title, reader.units())
+        works.append(dict(id=book.work_id, author=book.author, title=book.title, year=book.year,
+                          translator=book.translator, posts=posts, repo=book.repo))
 
     # --- Plato: one work per dialogue, dialogue text only (no Jowett introductions) ---------
     repo = "plato_dialogues_benjamin-jowett"

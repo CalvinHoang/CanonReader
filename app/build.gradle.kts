@@ -24,7 +24,7 @@ android {
         targetSdk = 37
         // Bump versionCode whenever assets/canon.db.gz changes: the app re-installs
         // its copy of the database when the version code changes.
-        versionCode = 1
+        versionCode = 2
         versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

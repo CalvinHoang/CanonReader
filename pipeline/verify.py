@@ -17,6 +17,7 @@ from lxml import etree
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build  # noqa: E402
+import gutenberg  # noqa: E402
 
 X, E = build.X, build.EPUB_TYPE
 WORD = re.compile(r"[\w’'-]+", re.UNICODE)
@@ -109,6 +110,76 @@ def words_of_source_tail_safe(el, repo, out):
     walk(el)
 
 
+def words(text):
+    # a bracketed number is a note marker, on both sides of the comparison
+    return WORD.findall(re.sub(r"\[\d+\]", " ", text))
+
+
+def pg_source_words(book):
+    """A Gutenberg book's text: every word between its start and stop headings, minus the
+    sections it skips, headings, page numbers, footnotes and note markers."""
+    out = []
+    for path in book.paths():
+        root = gutenberg.load(path, book)
+        notes = gutenberg.Notes(book, root)
+        st = {"active": not book.start, "skip": None, "done": False}
+
+        def taking():
+            return st["active"] and st["skip"] is None and not st.get("until")
+
+        def heading(e):
+            txt = gutenberg.heading_text(e)
+            if not st["active"]:
+                st["active"] = book.hit(book.start, e, txt)
+                if not st["active"]:
+                    return
+            elif book.hit(book.stop, e, txt):
+                st["done"] = True
+                return
+            lvl = book.level_of(e)
+            if st["skip"] is not None:
+                if lvl is not None and lvl <= st["skip"]:
+                    st["skip"] = None
+                else:
+                    return
+            if st.get("until"):
+                if not book.hit(st["until"], e, txt):
+                    return
+                st["until"] = None
+            for s in book.skip:
+                if isinstance(s, tuple) and book.hit(s[0], e, txt):
+                    st["until"] = s[1]
+                    return
+                if isinstance(s, str) and book.hit(s, e, txt):
+                    st["skip"] = lvl if lvl is not None else 99
+                    return
+
+        def walk(e):
+            t = gutenberg.tag(e)
+            if not t or st["done"]:
+                return
+            if book.is_dropped(e) or notes.is_body(e):
+                return
+            if book.inline_note and book.inline_note(e):
+                return
+            if book.is_heading(e):
+                heading(e)
+                return
+            if t == "a" and notes.ref(e) is not None:
+                return
+            if e.text and taking():
+                out.extend(words(e.text))
+            for c in e:
+                walk(c)
+                if st["done"]:
+                    return
+                if c.tail and taking():
+                    out.extend(words(c.tail))
+
+        walk(root.find("body"))
+    return out
+
+
 def post_words(db, work_id):
     out = []
     for (h,) in db.execute("SELECT html FROM posts WHERE work_id=? ORDER BY work_seq", (work_id,)):
@@ -170,6 +241,9 @@ def main():
                 src = []
                 words_of_source_tail_safe(top, repo, src)
                 ok &= compare(top.get("id"), src, post_words(db, top.get("id")))
+    # Project Gutenberg works
+    for book in gutenberg.BOOKS:
+        ok &= compare(book.work_id, pg_source_words(book), post_words(db, book.work_id))
     print("ALL IDENTICAL" if ok else "SOME DIFFERENCES")
     return 0 if ok else 1
 

@@ -98,6 +98,9 @@ dependencies {
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.work.compiler)
+    // hilt-work's compiler pulls an older kotlin-metadata-jvm that rejects Kotlin 2.4
+    // metadata ("unsupported metadata kind") on @HiltWorker classes.
+    kapt(libs.kotlin.metadata.jvm)
 
     // Post HTML -> native text
     implementation(libs.jsoup)

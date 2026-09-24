@@ -2,8 +2,12 @@ name: Android
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -16,7 +20,10 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
       - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+        run: ./gradlew :app:assembleDebug
+      - name: Show annotation-processor classpath
+        if: failure()
+        run: ./gradlew -q :app:dependencies --configuration kapt | grep -iE "metadata|hilt|room|dagger" || true
       - uses: actions/upload-artifact@v4
         with:
           name: canon-debug-apk
@@ -50,3 +57,13 @@ jobs:
         with:
           name: canon-screenshots
           path: screenshots/
+      # Also publish the screenshots to a throwaway branch so they can be viewed
+      # without downloading the artifact.
+      - name: Push screenshots branch
+        if: always()
+        run: |
+          cd screenshots
+          git init -q -b ci-screenshots
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "Screenshots for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" ci-screenshots

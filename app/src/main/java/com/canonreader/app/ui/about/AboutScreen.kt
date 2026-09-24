@@ -59,16 +59,17 @@ fun AboutScreen(onBack: () -> Unit) {
             )
             Heading("Where the text comes from")
             Para(
-                "Every text is the Standard Ebooks edition, which is in the public domain. Translations: Plato by " +
-                    "Benjamin Jowett; Thus Spake Zarathustra by Thomas Common; Beyond Good and Evil by Helen Zimmern; " +
-                    "The Genealogy of Morals by Horace B. Samuel. Editors' introductions and the translators' own " +
+                "The texts are public-domain editions from Standard Ebooks and, for the works Standard Ebooks " +
+                    "hasn't produced, Project Gutenberg. Translations: Plato by Benjamin Jowett; Nietzsche by " +
+                    "Thomas Common, Helen Zimmern, Horace B. Samuel, William A. Haussmann, Anthony M. Ludovici, " +
+                    "Adrian Collins, Paul V. Cohn and J. M. Kennedy. Editors' introductions and the translators' own " +
                     "essays are left out; authors' prefaces and appendices are kept, as are their notes, at the foot " +
                     "of each post.",
             )
             Heading("Built on Marginal Reader")
             Para(
                 "The reading experience comes from Marginal Reader, an unofficial app for Marginal Revolution. " +
-                    "This app is not affiliated with Marginal Revolution, Standard Ebooks or anyone else.",
+                    "This app is not affiliated with Marginal Revolution, Standard Ebooks, Project Gutenberg or anyone else.",
             )
             Text(
                 "Version ${BuildConfig.VERSION_NAME}",

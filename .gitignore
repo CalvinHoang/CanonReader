@@ -50,5 +50,6 @@ app/release/
 
 # Pipeline working files (sources are re-cloned by fetch_sources.sh)
 pipeline/se/
+pipeline/pg/
 pipeline/out/
 pipeline/__pycache__/

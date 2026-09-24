@@ -10,6 +10,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.InputStream
 import java.util.zip.GZIPInputStream
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,16 +43,24 @@ class CanonDatabase @Inject constructor(
         val installedVersion = prefs.getInt(KEY_VERSION, -1)
         if (!file.exists() || installedVersion != BuildConfig.VERSION_CODE) {
             val tmp = File(context.filesDir, "$DB_NAME.tmp")
-            context.assets.open(ASSET_NAME).use { raw ->
-                GZIPInputStream(raw.buffered(1 shl 16)).use { input ->
-                    tmp.outputStream().use { output -> input.copyTo(output, 1 shl 16) }
-                }
+            openBundledDatabase().use { input ->
+                tmp.outputStream().use { output -> input.copyTo(output, 1 shl 16) }
             }
             if (file.exists()) file.delete()
             check(tmp.renameTo(file)) { "Couldn't install the bundled library" }
             prefs.edit { putInt(KEY_VERSION, BuildConfig.VERSION_CODE) }
         }
         return SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
+    }
+
+    /**
+     * The build tools may un-gzip `.gz` assets while packaging, so the corpus can land
+     * in the APK as either canon.db.gz or plain canon.db.
+     */
+    private fun openBundledDatabase(): InputStream = try {
+        GZIPInputStream(context.assets.open(ASSET_NAME).buffered(1 shl 16))
+    } catch (e: FileNotFoundException) {
+        context.assets.open(DB_NAME).buffered(1 shl 16)
     }
 
     private companion object {

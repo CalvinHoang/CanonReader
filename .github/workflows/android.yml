@@ -28,6 +28,15 @@ jobs:
         with:
           name: canon-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+      - name: Push APK branch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir apk-out && cp app/build/outputs/apk/debug/*.apk apk-out/canon-debug.apk
+          cd apk-out
+          git init -q -b apk-debug
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "Debug APK for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" apk-debug
 
   screenshots:
     needs: build

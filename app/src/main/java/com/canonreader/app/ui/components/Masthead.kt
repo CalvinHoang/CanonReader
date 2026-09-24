@@ -21,11 +21,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.canonreader.app.ui.theme.CanonGold
-import com.canonreader.app.ui.theme.CanonInk
-import com.canonreader.app.ui.theme.RobotoFlex
+import com.canonreader.app.ui.theme.CanonGilt
+import com.canonreader.app.ui.theme.CanonOnRibbon
+import com.canonreader.app.ui.theme.Cinzel
+import com.canonreader.app.ui.theme.ribbonColor
 
-/** Compact masthead for the Feed: "THE CANON", set like a blog wordmark. */
+/** Compact masthead for the Feed: "The CANON", cut in Roman capitals like a title page. */
 @Composable
 fun CanonMasthead(
     modifier: Modifier = Modifier,
@@ -36,34 +37,37 @@ fun CanonMasthead(
         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             Row(
                 modifier = if (onTitleClick != null) Modifier.clickable(onClick = onTitleClick) else Modifier,
+                verticalAlignment = Alignment.Bottom,
             ) {
                 Text(
-                    "THE ",
-                    fontFamily = RobotoFlex,
+                    "The ",
+                    fontFamily = Cinzel,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 21.sp,
-                    lineHeight = 22.sp,
-                    color = CanonInk,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 1.sp,
+                    color = CanonGilt,
                 )
                 Text(
                     "CANON",
-                    fontFamily = RobotoFlex,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 21.sp,
-                    lineHeight = 22.sp,
-                    color = CanonInk,
+                    fontFamily = Cinzel,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 23.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 3.sp,
+                    color = CanonOnRibbon,
                 )
             }
         }
     }
 }
 
-/** The brand ribbon: ochre bar over a thin black rule. */
+/** The brand ribbon: an oxblood bar edged below by a gilt double rule. */
 @Composable
 fun TopRibbon(
     modifier: Modifier = Modifier,
-    containerColor: Color = CanonGold,
-    contentColor: Color = CanonInk,
+    containerColor: Color = ribbonColor(),
+    contentColor: Color = CanonOnRibbon,
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -76,7 +80,7 @@ fun TopRibbon(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(54.dp)
+                .height(56.dp)
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -85,12 +89,17 @@ fun TopRibbon(
                 actions()
             }
         }
-        Spacer(
-            Modifier
-                .fillMaxWidth()
-                .height(12.dp)
-                .background(Color.Black),
-        )
+        GiltRule()
+    }
+}
+
+/** A thick-and-thin gilt fillet, as under a printed running head. */
+@Composable
+fun GiltRule(modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxWidth().background(ribbonColor())) {
+        Spacer(Modifier.fillMaxWidth().height(3.dp).background(CanonGilt))
+        Spacer(Modifier.fillMaxWidth().height(2.dp))
+        Spacer(Modifier.fillMaxWidth().height(1.dp).background(CanonGilt))
     }
 }
 
@@ -106,11 +115,12 @@ fun TitleRibbon(
         navigation()
         Text(
             title,
-            fontFamily = RobotoFlex,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 19.sp,
+            fontFamily = Cinzel,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            letterSpacing = 1.sp,
             maxLines = 1,
-            color = CanonInk,
+            color = CanonOnRibbon,
             modifier = Modifier.weight(1f).padding(start = 4.dp),
         )
     }

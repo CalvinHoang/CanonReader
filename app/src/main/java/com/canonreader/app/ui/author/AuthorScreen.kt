@@ -38,7 +38,7 @@ import com.canonreader.app.domain.Work
 import com.canonreader.app.domain.readingMinutes
 import com.canonreader.app.ui.components.OverflowMenu
 import com.canonreader.app.ui.components.TitleRibbon
-import com.canonreader.app.ui.theme.CanonInk
+import com.canonreader.app.ui.theme.CanonOnRibbon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -88,7 +88,7 @@ fun AuthorScreen(
                 title = author?.name ?: "",
                 navigation = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonInk)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonOnRibbon)
                     }
                 },
                 actions = { OverflowMenu(onOpenSettings = onOpenSettings, onOpenAbout = onOpenAbout) },

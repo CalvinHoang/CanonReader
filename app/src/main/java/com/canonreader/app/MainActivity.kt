@@ -1,8 +1,10 @@
 package com.canonreader.app
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -31,7 +33,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         captureNotificationTarget(intent)
-        enableEdgeToEdge()
+        // The oxblood ribbon sits under the status bar in both themes, so its icons stay light.
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         setContent {
             val themeMode by themeViewModel.themeMode.collectAsStateWithLifecycle()
             val darkTheme = when (themeMode) {

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.canonreader.app.BuildConfig
 import com.canonreader.app.ui.components.TitleRibbon
-import com.canonreader.app.ui.theme.CanonInk
+import com.canonreader.app.ui.theme.CanonOnRibbon
 
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
@@ -30,7 +30,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 title = "About",
                 navigation = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonInk)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonOnRibbon)
                     }
                 },
             )

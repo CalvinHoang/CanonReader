@@ -46,12 +46,13 @@ import com.canonreader.app.domain.readingMinutes
 import com.canonreader.app.domain.toArrivalString
 import com.canonreader.app.domain.toDisplayString
 import com.canonreader.app.ui.components.ErrorState
+import com.canonreader.app.ui.components.GiltRule
 import com.canonreader.app.ui.components.HtmlContent
 import com.canonreader.app.ui.components.OverflowMenu
 import com.canonreader.app.ui.components.SelectionClearProvider
 import com.canonreader.app.ui.components.SelectableSurface
-import com.canonreader.app.ui.theme.CanonGold
-import com.canonreader.app.ui.theme.CanonInk
+import com.canonreader.app.ui.theme.CanonOnRibbon
+import com.canonreader.app.ui.theme.ribbonColor
 
 /**
  * Hosts the tapped post in a [HorizontalPager] over the deck it came from, so the
@@ -105,47 +106,50 @@ private fun PostDetailPage(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CanonGold,
-                    titleContentColor = CanonInk,
-                    navigationIconContentColor = CanonInk,
-                    actionIconContentColor = CanonInk,
-                ),
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    state.post?.let { post ->
-                        IconButton(
-                            onClick = {
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_SUBJECT, post.title)
-                                    putExtra(Intent.EXTRA_TEXT, shareText(post))
-                                }
-                                context.startActivity(Intent.createChooser(shareIntent, "Share post"))
-                            },
-                        ) {
-                            Icon(Icons.Filled.Share, contentDescription = "Share post")
+            Column {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = ribbonColor(),
+                        titleContentColor = CanonOnRibbon,
+                        navigationIconContentColor = CanonOnRibbon,
+                        actionIconContentColor = CanonOnRibbon,
+                    ),
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-                    }
-                    IconButton(onClick = viewModel::toggleSave) {
-                        Icon(
-                            if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
-                            contentDescription = if (isSaved) "Remove from saved" else "Save post",
+                    },
+                    actions = {
+                        state.post?.let { post ->
+                            IconButton(
+                                onClick = {
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_SUBJECT, post.title)
+                                        putExtra(Intent.EXTRA_TEXT, shareText(post))
+                                    }
+                                    context.startActivity(Intent.createChooser(shareIntent, "Share post"))
+                                },
+                            ) {
+                                Icon(Icons.Filled.Share, contentDescription = "Share post")
+                            }
+                        }
+                        IconButton(onClick = viewModel::toggleSave) {
+                            Icon(
+                                if (isSaved) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
+                                contentDescription = if (isSaved) "Remove from saved" else "Save post",
+                            )
+                        }
+                        OverflowMenu(
+                            tint = CanonOnRibbon,
+                            onOpenSettings = onOpenSettings,
+                            onOpenAbout = onOpenAbout,
                         )
-                    }
-                    OverflowMenu(
-                        tint = CanonInk,
-                        onOpenSettings = onOpenSettings,
-                        onOpenAbout = onOpenAbout,
-                    )
-                },
-            )
+                    },
+                )
+                GiltRule()
+            }
         },
     ) { innerPadding ->
         val post = state.post

@@ -48,8 +48,8 @@ import com.canonreader.app.domain.Author
 import com.canonreader.app.ui.components.OverflowMenu
 import com.canonreader.app.ui.components.TopRibbon
 import com.canonreader.app.ui.post.PostDeckHolder
-import com.canonreader.app.ui.theme.CanonInk
-import com.canonreader.app.ui.theme.RobotoFlex
+import com.canonreader.app.ui.theme.CanonOnRibbon
+import com.canonreader.app.ui.theme.Cinzel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -107,10 +107,11 @@ fun ExploreScreen(
             ) {
                 Text(
                     "Explore",
-                    fontFamily = RobotoFlex,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp,
-                    color = CanonInk,
+                    fontFamily = Cinzel,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    letterSpacing = 1.sp,
+                    color = CanonOnRibbon,
                     modifier = Modifier.weight(1f),
                 )
             }

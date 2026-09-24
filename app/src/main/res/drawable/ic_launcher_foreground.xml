@@ -4,8 +4,17 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- A heavy "C" in ink, inside the adaptive-icon safe zone. -->
+    <!-- A gilt medallion: a Cinzel capital "C" inside a thick-and-thin ring,
+         kept within the adaptive-icon safe zone. -->
     <path
-        android:fillColor="#111111"
-        android:pathData="M70,42 A20,20 0 1,0 70,66 L63.6,61.2 A12,12 0 1,1 63.6,46.8 Z" />
+        android:strokeColor="#D4AF5A"
+        android:strokeWidth="1.8"
+        android:pathData="M54,25 a29,29 0 1,1 -0.01,0z" />
+    <path
+        android:strokeColor="#D4AF5A"
+        android:strokeWidth="0.8"
+        android:pathData="M54,28.5 a25.5,25.5 0 1,1 -0.01,0z" />
+    <path
+        android:fillColor="#D4AF5A"
+        android:pathData="M70.52 56.87 70.96 65.37Q69.87 67.2 68.04 68.69Q66.21 70.17 63.49 71.09Q60.77 72 57.07 72Q51.03 71.95 46.51 69.8Q41.98 67.65 39.51 63.64Q37.04 59.64 37.04 53.95Q37.04 48.41 39.46 44.38Q41.88 40.35 46.41 38.18Q50.93 36 57.21 36Q61.17 36 64.31 36.79Q67.45 37.58 69.53 38.72L69.63 47.18H69.18Q67.85 42.28 64.83 40.18Q61.81 38.08 57.76 38.08Q53.8 38.08 50.98 40.01Q48.16 41.93 46.63 45.45Q45.1 48.96 45.1 53.85Q45.1 58.75 46.56 62.31Q48.02 65.87 50.71 67.85Q53.41 69.82 57.07 69.92Q60.87 69.92 63.49 68.69Q66.12 67.45 67.72 64.58Q69.33 61.71 70.12 56.87Z" />
 </vector>

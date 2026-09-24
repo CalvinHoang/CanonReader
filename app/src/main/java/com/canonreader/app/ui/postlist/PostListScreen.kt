@@ -21,7 +21,7 @@ import com.canonreader.app.data.CanonRepository
 import com.canonreader.app.ui.components.OverflowMenu
 import com.canonreader.app.ui.components.TitleRibbon
 import com.canonreader.app.ui.post.PostDeckHolder
-import com.canonreader.app.ui.theme.CanonInk
+import com.canonreader.app.ui.theme.CanonOnRibbon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -75,7 +75,7 @@ fun PostListScreen(
                 title = viewModel.title,
                 navigation = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonInk)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonOnRibbon)
                     }
                 },
                 actions = {

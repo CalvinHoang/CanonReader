@@ -40,7 +40,7 @@ import com.canonreader.app.data.preferences.ThemeMode
 import com.canonreader.app.data.preferences.ThemePreferences
 import com.canonreader.app.notifications.NewPostsScheduler
 import com.canonreader.app.ui.components.TitleRibbon
-import com.canonreader.app.ui.theme.CanonInk
+import com.canonreader.app.ui.theme.CanonOnRibbon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -100,7 +100,7 @@ fun SettingsScreen(
                 title = "Settings",
                 navigation = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonInk)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = CanonOnRibbon)
                     }
                 },
             )

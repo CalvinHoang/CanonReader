@@ -1,9 +1,9 @@
 package com.canonreader.app
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.canonreader.app.notifications.NewPostsScheduler
+import com.canonreader.app.notifications.NewPostsWorkerFactory
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class CanonApplication : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+    lateinit var workerFactory: NewPostsWorkerFactory
 
     @Inject
     lateinit var newPostsScheduler: dagger.Lazy<NewPostsScheduler>

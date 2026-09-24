@@ -11,11 +11,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.ListenableWorker
+import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.canonreader.app.MainActivity
 import com.canonreader.app.R
@@ -23,6 +24,7 @@ import com.canonreader.app.data.CanonRepository
 import com.canonreader.app.data.DripSchedule
 import com.canonreader.app.data.preferences.NotificationPreferences
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +57,24 @@ class NewPostsScheduler @Inject constructor(
     }
 }
 
-@HiltWorker
+/**
+ * Builds [NewPostsWorker] with its injected dependencies. Written by hand instead of
+ * androidx.hilt's @HiltWorker, whose annotation processor can't read Kotlin 2.4 metadata.
+ */
+@Singleton
+class NewPostsWorkerFactory @Inject constructor(
+    private val newPostsWorker: NewPostsWorker.Factory,
+) : WorkerFactory() {
+    override fun createWorker(
+        appContext: Context,
+        workerClassName: String,
+        workerParameters: WorkerParameters,
+    ): ListenableWorker? = when (workerClassName) {
+        NewPostsWorker::class.java.name -> newPostsWorker.create(appContext, workerParameters)
+        else -> null
+    }
+}
+
 class NewPostsWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
@@ -128,6 +147,11 @@ class NewPostsWorker @AssistedInject constructor(
             applicationContext.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
         return granted && NotificationManagerCompat.from(applicationContext).areNotificationsEnabled()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(context: Context, params: WorkerParameters): NewPostsWorker
     }
 
     private companion object {
